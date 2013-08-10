@@ -9,7 +9,7 @@ class OtherTypeController:
     #对项目财务类型(expend_type)表的操作
     def add_expend_type(self,db,type):
         cursor=db.cursor()
-        cursor.execute("insert into expend_type values ('"+type+"')")
+        cursor.execute("insert into expend_type values (%s)",type)
         db.commit()
     def select_expend_type_name(self,db):
         cursor = db.cursor()
@@ -20,7 +20,7 @@ class OtherTypeController:
     #对工作类型表(proj_type)的操作
     def add_work_type(self,db,type):
         cursor=db.cursor()
-        cursor.execute("insert into proj_type values ('"+type+"')")
+        cursor.execute("insert into proj_type values (%s)",type)
         db.commit()
     def select_proj_type_name(self,db):
         cursor = db.cursor()
@@ -36,8 +36,8 @@ class OtherTypeController:
         return result
     def delete_proj_type(self,db,type):
         cursor = db.cursor()
-        sql = "delete from proj_type where rowid="+type
-        cursor.execute(sql)
+        sql = "delete from proj_type where rowid=%s"
+        cursor.execute(sql,type)
         db.commit()
     #对员工工作岗位表(user_work_type)的操作
     def select_user_work_type_table(self,db):
@@ -47,16 +47,16 @@ class OtherTypeController:
         return result
     def select_user_work_type(self,db,i):
         cursor = db.cursor()
-        cursor.execute("select user_work_type from user_work_type where user_work_type_id='"+str(i)+"'")
+        cursor.execute("select user_work_type from user_work_type where user_work_type_id=%s",i)
         result=cursor.fetchone()
         return result
     def select_user_work_id(self,db,type):
         cursor = db.cursor()
-        sql="select user_work_type_id from user_work_type where user_work_type='"+type+"'"
-        cursor.execute(sql)
+        sql="select user_work_type_id from user_work_type where user_work_type=%s"
+        cursor.execute(sql,type)
         result=cursor.fetchone()
         return result
     def add_user_work_type(self,db,type):
         cursor=db.cursor()
-        cursor.execute("insert into user_work_type values (null,'"+type+"')")
+        cursor.execute("insert into user_work_type values (null,%s)",type)
         db.commit()
