@@ -466,8 +466,8 @@ class PMMMPluginPage(Component):
             if anaWay==1:
                 row_values8=sheet.row_values(r)[8]
                 row_values7=sheet.row_values(r)[7]
-                sql="select record_id from attendance_record where user_number='"+row_values1+"'and date='"+row_values3+"' and starttime='"+row_values4+"' and endtime1='"+row_values5+"' and endtime2='"+row_values6+"' and endtime3='"+row_values7+"' and endtime4='"+row_values8+"'"
-                cursor.execute(sql)
+                sql="select record_id from attendance_record where user_number=%sand date=%s and starttime=%s and endtime1=%s and endtime2=%s and endtime3=%s and endtime4=%s"
+                cursor.execute(sql,(row_values1,row_values3,row_values4,row_values5,row_values6,row_values7,row_values8))
                 record_id=cursor.fetchone()
                 if record_id!=None:
                     print 'the record is exist!'
@@ -543,7 +543,7 @@ class PMMMPluginPage(Component):
     def _proj_expend_list(self,req,startDate,endDate):
         db = self.env.get_db_cnx()
         cursor = db.cursor()
-        cursor.execute("select proj_name,expend_type,expend,time,remarks,rowid from proj_expend where time>='"+startDate+"' and time<='"+endDate+"' order by proj_name")
+        cursor.execute("select proj_name,expend_type,expend,time,remarks,rowid from proj_expend where time>=%s and time<=%s order by proj_name",(startDate,endDate))
         listResult=cursor.fetchall()
         dictP=self._dictProj()
         queryList=[]
@@ -618,7 +618,7 @@ class PMMMPluginPage(Component):
         remarks = req.args['Remarks']
         expend = req.args['expend']
         rowid = req.args['rowid']
-        cursor.execute("update proj_expend set proj_name='"+proj_name+"',expend_type='"+expend_type+"',expend='"+expend+"',time='"+time+"',remarks='"+remarks+"' where rowid='"+rowid+"'")
+        cursor.execute("update proj_expend set proj_name=%s,expend_type=%s,expend=%s,time=%s,remarks=%s where rowid=%s",(proj_name,expend_type,expend,time,remarks,rowid))
         db.commit()
         theYear = time.split("-")[0]
         theMonth = time.split("-")[1]
@@ -629,12 +629,12 @@ class PMMMPluginPage(Component):
     def _dere_expend(self,req,data):
         db=self.env.get_db_cnx()
         cursor = db.cursor()
-        cursor.execute("select time from proj_expend where rowid='"+data+"'")
+        cursor.execute("select time from proj_expend where rowid=%s",data)
         dt=cursor.fetchone()
         for d in dt:
             time=d
-        sql = "delete from proj_expend where rowid='"+data+"'"
-        cursor.execute(sql)
+        sql = "delete from proj_expend where rowid=%s"
+        cursor.execute(sql,data)
         db.commit()
         theYear = time.split("-")[0]
         theMonth = time.split("-")[1]
@@ -1167,8 +1167,8 @@ class PMMMPluginPage(Component):
                  if localtime<ti[0]:
                     break
                  else:
-                    sql="select sum(expend) from proj_expend where proj_name='"+str(pr)+"' AND time>='"+str(ti[0])+"' AND time<='"+str(ti[1])+"' and expend_type='"+str(name)+"'"
-                    cursor.execute(sql)
+                    sql="select sum(expend) from proj_expend where proj_name=%s AND time>=%s AND time<=%s and expend_type=%s"
+                    cursor.execute(sql,(pr,ti[0],ti[1],name))
                     expend=cursor.fetchone()
                     for t in expend:
                             if t!=None:
