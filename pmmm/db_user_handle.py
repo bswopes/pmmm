@@ -16,8 +16,8 @@ class UsertableController:
     #查询出用户级别
     def select_userlevel(self,db,user):
          cu=db.cursor()
-         sql = "select user_level from user where username='"+str(user)+"'"
-         cu.execute(sql)
+         sql = "select user_level from user where username=%s"
+         cu.execute(sql,str(level))
          result=cu.fetchone()
          return result
     #修改user级别
@@ -49,14 +49,14 @@ class UsertableController:
     #删除用户中文名
     def delete_userzh(self,db,user):
          cu=db.cursor()
-         sql = 'update user set username_zh="" where rowid="'+user+'"'
-         cu.execute(sql)
+         sql = 'update user set username_zh="" where rowid=%s'
+         cu.execute(sql,user)
          db.commit()
     #删除数据库里的用户
     def delete_user(self,db,user):
          cu=db.cursor()
-         sql = "delete from user where username='"+str(user)+"'"
-         cu.execute(sql)
+         sql = "delete from user where username=%s"
+         cu.execute(sql,str(user))
          db.commit()
     #从数据库读出所有用户供删除操作使用
     def select_user_name(self,db):
@@ -86,8 +86,8 @@ class UsertableController:
     #查询用户部门id
     def select_user_depid(self,db,user):
          cu=db.cursor()
-         sql = "select dep_id from user where username='"+user+"'"
-         cu.execute(sql)
+         sql = "select dep_id from user where username=%s"
+         cu.execute(sql,user)
          result=cu.fetchone()
          return result
     #查询user用户表中员工
@@ -128,8 +128,8 @@ class UsertableController:
      #查询部门经理部门下的用户
     def select_dep_user(self,db,user):
          cu=db.cursor()
-         sql = "select username from user,department where user.dep_id=department.dep_id AND (dep_manager='"+user+"' OR dep_deputy_manager='"+user+"')"
-         cu.execute(sql)
+         sql = "select username from user,department where user.dep_id=department.dep_id AND (dep_manager=%s OR dep_deputy_manager=%s)"
+         cu.execute(sql,(user,user))
          result=cu.fetchall()
          return result
     #根据部门id，查询用户
@@ -142,15 +142,15 @@ class UsertableController:
     #根据部门id，查询用户中午名
     def select_dep_user_zh(self,db,data):
          cu=db.cursor()
-         sql = "select username_zh from user where dep_id='"+data+"'"
-         cu.execute(sql)
+         sql = "select username_zh from user where dep_id=%s"
+         cu.execute(sql,data)
          result=cu.fetchall()
          return result
     #查出用户表中不在某一部门的人员
     def select_none_dep_user(self,db,data):
          cu=db.cursor()
-         sql = "select username from user where dep_id<>'"+data+"' and use_state=0"
-         cu.execute(sql)
+         sql = "select username from user where dep_id<>%s and use_state=0"
+         cu.execute(sql,data)
          result=cu.fetchall()
          return result
     #修改用户部门编号
@@ -162,13 +162,13 @@ class UsertableController:
     #删除已有部门时，修改删除部门用户的id为0
     def updata_deldep_user_depid(self,db,d):
          cu=db.cursor()
-         sql = "update user set dep_id=0 where dep_id='"+d+"'"
-         cu.execute(sql)
+         sql = "update user set dep_id=0 where dep_id=%s"
+         cu.execute(sql,d)
          db.commit()
     #查询用户中文名
     def select_userZh_name(self,db,arg):
         cu = db.cursor()
-        cu.execute("select username_zh from user where username='"+arg+"'")
+        cu.execute("select username_zh from user where username=%s",arg)
         uZh =cu.fetchone()
         return uZh
     #根据用户在职情况查询出用户有工资的人员
@@ -188,13 +188,13 @@ class UsertableController:
     #查询出人员工资
     def select_user_salary(self,db,user):
         cu = db.cursor()
-        cu.execute("select use_salary from user where username='"+user+"'")
+        cu.execute("select use_salary from user where username=%s",user)
         salary =cu.fetchall()
         return salary
      #查询出人员工资
     def select_salary(self,db,user):
         cu = db.cursor()
-        cu.execute("select use_salary from user where username='"+user+"'")
+        cu.execute("select use_salary from user where username=%s",user)
         salary =cu.fetchall()
         return salary
     #添加员工工资
@@ -206,13 +206,13 @@ class UsertableController:
     #删除员工工资
     def delete_user_salary(self,db,user):
         cu=db.cursor()
-        sql = 'update user set use_salary="" where username="'+user+'"'
-        cu.execute(sql)
+        sql = 'update user set use_salary="" where username=%s'
+        cu.execute(sql,user)
         db.commit()
     def _update_user_satae(self,db,user):
         cu=db.cursor()
-        sql ="update user set use_state=1 where username='"+user+"'"
-        cu.execute(sql)
+        sql ="update user set use_state=1 where username=%s"
+        cu.execute(sql,user)
         db.commit()
     def select_leave_users(self,db):
          cu=db.cursor()
@@ -234,8 +234,8 @@ class UsertableController:
         return users
     def select_user_by_use_work_type(self,db,id):
         cu = db.cursor()
-        sql="select username from user where use_work_type='"+str(id)+"'"
-        cu.execute(sql)
+        sql="select username from user where use_work_type=%s"
+        cu.execute(sql,id)
         users =cu.fetchall()
         return users
     def select_user_by_use_work_type2(self,db):
